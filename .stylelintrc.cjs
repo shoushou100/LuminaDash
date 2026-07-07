@@ -1,0 +1,10 @@
+module.exports = {
+  extends: ['stylelint-config-standard'],
+  rules: {
+    'selector-class-pattern': null,
+    'no-descending-specificity': null,
+    'color-function-notation': null,
+    'alpha-value-notation': null,
+  },
+  ignoreFiles: ['node_modules', 'dist', 'coverage'],
+}
