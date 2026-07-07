@@ -25,49 +25,31 @@ defineProps<{
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 14px 16px;
+  padding: 16px 18px;
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
-  border-radius: 10px;
-  backdrop-filter: blur(6px);
-  box-shadow: var(--glow-blue);
+  border-radius: var(--radius);
   overflow: hidden;
-}
-
-.panel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  padding: 1px;
-  background: var(--gradient-neon);
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0.35;
-  pointer-events: none;
 }
 
 .panel__header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .panel__bar {
-  width: 4px;
-  height: 16px;
+  width: 3px;
+  height: 14px;
   border-radius: 2px;
-  background: var(--gradient-neon);
+  background: var(--accent);
 }
 
 .panel__title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0;
   color: var(--text-0);
 }
 

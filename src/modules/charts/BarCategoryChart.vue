@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import type { CategoryItem } from '@/services/datasource/types'
+import { CHART } from '@/core/config/chart'
 
 const props = defineProps<{
   data: CategoryItem[]
@@ -14,13 +15,14 @@ const option = computed(() => ({
   xAxis: {
     type: 'category',
     data: props.data.map((d) => d.name),
-    axisLine: { lineStyle: { color: 'rgba(159,179,209,0.4)' } },
-    axisLabel: { color: '#9fb3d1' },
+    axisLine: { lineStyle: { color: CHART.axisLine } },
+    axisLabel: { color: CHART.textSecondary },
+    axisTick: { show: false },
   },
   yAxis: {
     type: 'value',
-    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
-    axisLabel: { color: '#9fb3d1' },
+    splitLine: { lineStyle: { color: CHART.splitLine } },
+    axisLabel: { color: CHART.textSecondary },
   },
   series: [
     {
@@ -28,18 +30,8 @@ const option = computed(() => ({
       data: props.data.map((d) => d.value),
       barWidth: '46%',
       itemStyle: {
-        borderRadius: [6, 6, 0, 0],
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            { offset: 0, color: '#9b6bff' },
-            { offset: 1, color: '#4d8bff' },
-          ],
-        },
+        borderRadius: [4, 4, 0, 0],
+        color: CHART.accent,
       },
     },
   ],

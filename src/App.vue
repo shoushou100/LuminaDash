@@ -4,9 +4,11 @@ import autofit from 'autofit.js'
 import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard'
 import { createLogger } from '@/core/logger'
+import { env } from '@/core/config/env'
 import ScreenContainer from '@/modules/layout/ScreenContainer.vue'
 import PanelHeader from '@/modules/widgets/PanelHeader.vue'
 import KpiCard from '@/modules/widgets/KpiCard.vue'
+import ScreenshotToggle from '@/modules/widgets/ScreenshotToggle.vue'
 import LineTrendChart from '@/modules/charts/LineTrendChart.vue'
 import BarCategoryChart from '@/modules/charts/BarCategoryChart.vue'
 import PieShareChart from '@/modules/charts/PieShareChart.vue'
@@ -38,7 +40,7 @@ onMounted(() => {
   tickClock()
   clockTimer = window.setInterval(tickClock, 1000)
   store.loadAll()
-  refreshTimer = window.setInterval(() => store.refreshRealtime(), 5000)
+  refreshTimer = window.setInterval(() => store.tick(), env.refreshInterval)
 })
 
 onBeforeUnmount(() => {
@@ -53,7 +55,10 @@ onBeforeUnmount(() => {
       <span>数据来源：Mock</span>
     </template>
     <template #top-right>
-      <span>{{ clock }} · 更新于 {{ lastUpdated || '—' }}</span>
+      <div class="top-right">
+        <ScreenshotToggle />
+        <span>{{ clock }} · 更新于 {{ lastUpdated || '—' }}</span>
+      </div>
     </template>
 
     <div class="dashboard">
@@ -90,17 +95,23 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .dashboard {
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 16px;
+  gap: 24px;
 }
 
 .dashboard__kpis {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 24px;
   height: 110px;
 }
 
@@ -114,7 +125,7 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1.2fr 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
 }
 
 .dashboard__charts :deep(.span-2) {

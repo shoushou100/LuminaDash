@@ -16,6 +16,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "screenshot": "node scripts/screenshot.mjs",
+    "screenshot:once": "node scripts/screenshot.mjs --once",
     "typecheck": "vue-tsc --noEmit",
     "prepare": "husky"
   },
@@ -64,5 +66,11 @@
     "*.{json,md,cjs}": [
       "prettier --write"
     ]
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "esbuild@0.21.5": true,
+    "vue-demi@0.14.10": true,
+    "vue-demi@0.13.11": true
   }
 }

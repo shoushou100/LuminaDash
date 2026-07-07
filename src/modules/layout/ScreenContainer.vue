@@ -28,7 +28,7 @@ defineProps<{
   height: 1080px;
   display: flex;
   flex-direction: column;
-  padding: 20px 28px 28px;
+  padding: 28px 40px 36px;
   transform-origin: left top;
 }
 
@@ -36,22 +36,19 @@ defineProps<{
   position: relative;
   display: flex;
   align-items: center;
-  height: 72px;
-  margin-bottom: 18px;
+  height: 64px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--panel-border);
 }
 
 .screen__title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: 4px;
-  background: var(--gradient-neon);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 24px rgba(77, 139, 255, 0.35);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-0);
 }
 
 .screen__side {

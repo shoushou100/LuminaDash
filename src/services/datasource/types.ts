@@ -40,4 +40,5 @@ export interface DataSource {
   getCategory(): Promise<CategoryItem[]>
   getShare(): Promise<ShareItem[]>
   getRealtime(): Promise<RealtimeItem[]>
+  tick(): Promise<DashboardData>
 }

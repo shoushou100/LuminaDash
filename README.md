@@ -1,53 +1,158 @@
 # LuminaDash · 流光大屏
 
-> 一个开源的数据可视化大屏项目，致力于用简洁、炫酷的方式呈现数据。
+> 一个基于 Vue 3 的数据可视化大屏项目，主打极简中性深色风格、实时模拟数据与一键自动化截图。
 
-[English](./README.md) · 简体中文
+[![Build](https://img.shields.io/badge/build-passing-2ea043)](https://github.com/shoushou100/LuminaDash)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Vue 3](https://img.shields.io/badge/Vue-3.5-42b883?logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![ECharts](https://img.shields.io/badge/ECharts-5-ff6a00)](https://echarts.apache.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Last Commit](https://img.shields.io/github/last-commit/shoushou100/LuminaDash)](https://github.com/shoushou100/LuminaDash)
 
-## 项目简介
+![LuminaDash 预览](./docs/preview.png)
 
-**LuminaDash（流光大屏）** 是一个公开的数据可视化大屏项目，适合学习、演示与二次开发。项目以“流光”为视觉基调，提供可配置的图表、实时数据展示与自适应布局能力。
+## ✨ 特性
 
-## 特性
+- 🎨 **极简中性深色主题**：单一强调蓝 `#3b82f6`，去除霓虹光晕与渐变，留白充足、信息层级清晰。
+- 📊 **五类图表**：实时趋势折线、区域对比柱状、渠道占比饼图、目标完成率仪表盘、区域分布散点。
+- 🔢 **KPI 按位滚动动画**：仅变化的数字位会滚动，未变位保持静止，过渡自然。
+- 🔄 **实时模拟数据**：内置随机游走（random walk）数据源，每 3 秒平滑刷新全部指标与图表。
+- 📐 **自适应大屏**：基于 `autofit.js` 的 1920×1080 设计稿等比缩放，适配不同分辨率。
+- 🔌 **可切换数据源**：通过 `VITE_DATA_SOURCE` 在 `mock`（带实时模拟）与 `api`（REST）之间切换。
+- 📸 **一键自动化截图**：CLI 循环/单次截图，网页内「截图模式」开关即开即停，便于验收与资料引用。
 
-- 📊 多类型图表支持（折线、柱状、饼图、地图等）
-- 🎨 炫酷流光主题，深色大屏风格
-- 📱 响应式布局，自适应不同分辨率屏幕
-- ⚡ 轻量易用，方便二次开发与扩展
-- 🔌 可对接多种数据源
+## 🖼️ 界面预览
 
-## 目录结构
-
-```
-LuminaDash/
-├── index.html      # 入口页面
-├── style.css       # 样式文件
-├── game.js         # 脚本/逻辑（示例或占位）
-├── LICENSE         # MIT 开源协议
-└── README.md       # 项目说明
-```
-
-## 快速开始
+上图为运行中的大屏截图，由项目内置截图能力自动生成（见 [📸 自动化截图](#-自动化截图)）。如需重新生成，执行：
 
 ```bash
-# 克隆项目
+npm run screenshot:once
+```
+
+截图默认输出到 `pic/`，并同步刷新可用于文档的 `docs/preview.png`。
+
+## 🚀 快速开始
+
+```bash
+# 克隆仓库
 git clone https://github.com/shoushou100/LuminaDash.git
 cd LuminaDash
 
-# 使用任意静态服务器预览（以 Python 为例）
-python -m http.server 8080
-# 浏览器打开 http://localhost:8080
+# 安装依赖
+npm install
+
+# 启动开发服务器（默认 http://localhost:5173）
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 本地预览构建产物
+npm run preview
 ```
 
-## 技术栈
+## ⚙️ 环境变量
 
-- 前端：HTML / CSS / JavaScript
-- 可视化：可基于 ECharts、D3 等（规划中）
+通过项目根目录的 `.env.development` / `.env.production` 配置：
 
-## 贡献
+| 变量 | 说明 | 默认值 |
+| --- | --- | --- |
+| `VITE_DATA_SOURCE` | 数据源模式：`mock`（带实时模拟）或 `api`（REST 接口） | `mock` |
+| `VITE_API_BASE_URL` | `api` 模式下的接口基础地址 | `/api` |
+| `VITE_REFRESH_INTERVAL` | 实时数据刷新间隔（毫秒） | `3000` |
+
+自动化截图的 CLI 参数（非环境变量）：
+
+| 参数 | 说明 | 默认值 |
+| --- | --- | --- |
+| `--once` | 只截图一张即退出 | 关闭（循环） |
+| `--dir <路径>` | 截图输出目录 | `pic` |
+| `--interval <毫秒>` | 循环截图间隔 | `60000` |
+| `--scale <1\|2>` | 截图清晰度（设备像素比） | `2` |
+
+## 🧩 目录结构
+
+```
+LuminaDash/
+├── index.html
+├── package.json
+├── vite.config.ts            # 含截图控制中间件 /api/screenshot/*
+├── playwright.config.ts      # e2e 测试配置（自动拉起 dev）
+├── tsconfig.json
+├── .env.development / .env.production
+├── scripts/
+│   ├── screenshot.mjs        # CLI 自动截图（循环 / 单次）
+│   └── screenshot-core.mjs   # 截图核心逻辑（CLI 与 dev 中间件共用）
+├── docs/
+│   └── preview.png           # 预览图（自动生成，随仓库提交）
+├── pic/                      # 截图输出目录（已被 .gitignore 忽略）
+└── src/
+    ├── main.ts
+    ├── App.vue
+    ├── core/
+    │   ├── config/           # env.ts（环境变量）、chart.ts（图表主题）
+    │   ├── logger/           # 轻量日志
+    │   └── utils/            # 工具函数
+    ├── stores/
+    │   └── dashboard.ts      # Pinia 全局状态
+    ├── services/
+    │   └── datasource/       # DataSource 抽象 + Mock / Api 实现
+    ├── mock/
+    │   └── dashboard.data.ts # mock 种子数据
+    ├── modules/
+    │   ├── layout/           # ScreenContainer 大屏布局
+    │   ├── charts/           # 折线 / 柱状 / 饼图 / 仪表盘 / 地图
+    │   └── widgets/          # KpiCard / PanelHeader / ScreenshotToggle
+    ├── styles/               # theme.css / global.css
+    └── tests/
+        ├── unit/             # Vitest 单元测试
+        └── e2e/              # Playwright 端到端测试
+```
+
+## 📸 自动化截图
+
+项目内置基于 Playwright 的自动截图能力，适用于 README 展示、课程资料引用、多 AI 协作验收与视觉检查。
+
+**方式一：命令行（CI / 单次生成）**
+
+```bash
+# 单次截图：生成一张即停，输出到 pic/ 并刷新 docs/preview.png
+npm run screenshot:once
+
+# 循环截图：每 60 秒自动保存一张带时间戳的截图，Ctrl+C 停止
+npm run screenshot
+```
+
+**方式二：网页内开关**
+
+页面右上角提供「截图模式」开关：
+
+- 打开：经 `vite.config.ts` 中间件 `POST /api/screenshot/start` 启动截图循环；
+- 关闭：经 `POST /api/screenshot/stop` 停止。
+
+截图统一保存到 `pic/`，并同步生成 `docs/preview.png`（可提交入库的预览图）。
+
+## 🧪 测试
+
+```bash
+# 单元测试（Vitest）
+npm run test
+
+# 端到端测试（Playwright）
+npm run test:e2e
+```
+
+> 首次运行 e2e 需安装浏览器：`npx playwright install chromium`
+
+## 🤝 贡献
 
 欢迎提交 Issue 与 Pull Request，一起完善流光大屏！
 
-## 开源协议
+## 📄 开源协议
 
 本项目基于 [MIT License](./LICENSE) 开源。
+
+## 🔗 相关链接
+
+- 仓库地址：<https://github.com/shoushou100/LuminaDash>

@@ -64,5 +64,14 @@ export const useDashboardStore = defineStore('dashboard', {
       this.realtime = await dataSource.getRealtime()
       this.lastUpdated = nowTime()
     },
+    async tick(): Promise<void> {
+      const data = await dataSource.tick()
+      this.kpis = data.kpis
+      this.trend = data.trend
+      this.category = data.category
+      this.share = data.share
+      this.realtime = data.realtime
+      this.lastUpdated = nowTime()
+    },
   },
 })

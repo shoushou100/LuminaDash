@@ -4,6 +4,7 @@ dist-ssr
 coverage
 playwright-report
 test-results
+pic/
 *.local
 
 # Logs

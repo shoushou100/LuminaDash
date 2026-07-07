@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
+import { CHART } from '@/core/config/chart'
 
 const props = defineProps<{
   value: number
@@ -20,12 +21,12 @@ const option = computed(() => ({
       progress: {
         show: true,
         width: 14,
-        itemStyle: { color: '#36cfc9' },
+        itemStyle: { color: CHART.accent },
       },
       axisLine: {
         lineStyle: {
           width: 14,
-          color: [[1, 'rgba(255,255,255,0.12)']],
+          color: [[1, 'rgba(255,255,255,0.10)']],
         },
       },
       axisTick: { show: false },
@@ -34,20 +35,20 @@ const option = computed(() => ({
       pointer: {
         length: '60%',
         width: 4,
-        itemStyle: { color: '#4d8bff' },
+        itemStyle: { color: CHART.accentSoft },
       },
-      anchor: { show: true, size: 10, itemStyle: { color: '#4d8bff' } },
+      anchor: { show: true, size: 10, itemStyle: { color: CHART.accentSoft } },
       detail: {
         valueAnimation: true,
         formatter: '{value}%',
-        color: '#eaf2ff',
+        color: CHART.textPrimary,
         fontSize: 26,
         offsetCenter: [0, '40%'],
       },
       title: {
         show: true,
         offsetCenter: [0, '75%'],
-        color: '#9fb3d1',
+        color: CHART.textSecondary,
         fontSize: 13,
       },
       data: [{ value: Math.round(props.value), name: props.title || '完成率' }],

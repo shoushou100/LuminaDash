@@ -1,9 +1,44 @@
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
+import { startCapture, stopCapture, captureStatus } from './scripts/screenshot-core.mjs'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    {
+      name: 'screenshot-control',
+      configureServer(server) {
+        server.middlewares.use('/api/screenshot', (req, res) => {
+          const port = server.config.server.port || 5173
+          const url = `http://localhost:${port}`
+
+          const json = (data) => {
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify(data))
+          }
+
+          if (req.method === 'POST' && req.url === '/start') {
+            startCapture({ url }).catch((err) =>
+              console.error('[screenshot] start failed', err),
+            )
+            json({ running: true })
+            return
+          }
+          if (req.method === 'POST' && req.url === '/stop') {
+            stopCapture().then(() => json({ running: false }))
+            return
+          }
+          if (req.method === 'GET' && req.url === '/status') {
+            json(captureStatus())
+            return
+          }
+          res.statusCode = 404
+          res.end('Not found')
+        })
+      },
+    },
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

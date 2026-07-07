@@ -1,4 +1,3 @@
-import { createLogger } from '@/core/logger'
 import type {
   CategoryItem,
   DashboardData,
@@ -7,8 +6,6 @@ import type {
   ShareItem,
   TrendPoint,
 } from '@/services/datasource/types'
-
-const logger = createLogger('mock:data')
 
 export const mockDashboard: DashboardData = {
   kpis: [
@@ -48,31 +45,11 @@ export const mockDashboard: DashboardData = {
   ],
 }
 
-function delay<T>(data: T, ms = 300): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(data), ms))
-}
-
-export function getMockKpis(): Promise<Kpi[]> {
-  logger.debug('getKpis')
-  return delay(mockDashboard.kpis)
-}
-
-export function getMockTrend(): Promise<TrendPoint[]> {
-  logger.debug('getTrend')
-  return delay(mockDashboard.trend)
-}
-
-export function getMockCategory(): Promise<CategoryItem[]> {
-  logger.debug('getCategory')
-  return delay(mockDashboard.category)
-}
-
-export function getMockShare(): Promise<ShareItem[]> {
-  logger.debug('getShare')
-  return delay(mockDashboard.share)
-}
-
-export function getMockRealtime(): Promise<RealtimeItem[]> {
-  logger.debug('getRealtime')
-  return delay(mockDashboard.realtime)
+export type {
+  CategoryItem,
+  DashboardData,
+  Kpi,
+  RealtimeItem,
+  ShareItem,
+  TrendPoint,
 }

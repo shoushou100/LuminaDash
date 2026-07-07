@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import type { TrendPoint } from '@/services/datasource/types'
+import { CHART } from '@/core/config/chart'
 
 const props = defineProps<{
   data: TrendPoint[]
@@ -14,23 +15,24 @@ const option = computed(() => ({
   xAxis: {
     type: 'category',
     data: props.data.map((d) => d.time),
-    axisLine: { lineStyle: { color: 'rgba(159,179,209,0.4)' } },
-    axisLabel: { color: '#9fb3d1' },
+    axisLine: { lineStyle: { color: CHART.axisLine } },
+    axisLabel: { color: CHART.textSecondary },
+    axisTick: { show: false },
   },
   yAxis: {
     type: 'value',
-    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
-    axisLabel: { color: '#9fb3d1' },
+    splitLine: { lineStyle: { color: CHART.splitLine } },
+    axisLabel: { color: CHART.textSecondary },
   },
   series: [
     {
       type: 'line',
       smooth: true,
       symbol: 'circle',
-      symbolSize: 6,
+      symbolSize: 5,
       data: props.data.map((d) => d.value),
-      lineStyle: { color: '#36cfc9', width: 3 },
-      itemStyle: { color: '#36cfc9' },
+      lineStyle: { color: CHART.accent, width: 2 },
+      itemStyle: { color: CHART.accent },
       areaStyle: {
         color: {
           type: 'linear',
@@ -39,8 +41,8 @@ const option = computed(() => ({
           x2: 0,
           y2: 1,
           colorStops: [
-            { offset: 0, color: 'rgba(54,207,201,0.45)' },
-            { offset: 1, color: 'rgba(54,207,201,0.02)' },
+            { offset: 0, color: 'rgba(59, 130, 246, 0.18)' },
+            { offset: 1, color: 'rgba(59, 130, 246, 0.01)' },
           ],
         },
       },

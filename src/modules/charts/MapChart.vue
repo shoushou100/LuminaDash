@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import type { RealtimeItem } from '@/services/datasource/types'
+import { CHART } from '@/core/config/chart'
 
 const props = defineProps<{
   data: RealtimeItem[]
@@ -16,27 +17,28 @@ const option = computed(() => {
     xAxis: {
       type: 'category',
       data: props.data.map((d) => d.region),
-      axisLine: { lineStyle: { color: 'rgba(159,179,209,0.4)' } },
-      axisLabel: { color: '#9fb3d1', rotate: 30 },
+      axisLine: { lineStyle: { color: CHART.axisLine } },
+      axisLabel: { color: CHART.textSecondary, rotate: 30 },
+      axisTick: { show: false },
     },
     yAxis: {
       type: 'value',
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
-      axisLabel: { color: '#9fb3d1' },
+      splitLine: { lineStyle: { color: CHART.splitLine } },
+      axisLabel: { color: CHART.textSecondary },
     },
     visualMap: {
       show: false,
       min: 0,
       max,
       dimension: 1,
-      inRange: { color: ['#4d8bff', '#36cfc9', '#ff5fa2'] },
+      inRange: { color: ['#1e293b', CHART.accentSoft, CHART.accent] },
     },
     series: [
       {
         type: 'scatter',
         symbolSize: (val: number[]) => 14 + (val[1] / max) * 26,
         data: props.data.map((d) => [d.region, d.value]),
-        itemStyle: { shadowBlur: 12, shadowColor: 'rgba(77,139,255,0.6)' },
+        itemStyle: { color: CHART.accent },
       },
     ],
   }
