@@ -2,15 +2,22 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import KpiCard from '@/modules/widgets/KpiCard.vue'
 import PanelHeader from '@/modules/widgets/PanelHeader.vue'
-import type { Kpi } from '@/services/datasource/types'
+import type { CoreMetric } from '@/services/datasource/types'
 
 describe('widgets render', () => {
-  const kpi: Kpi = { id: 'uv', label: '今日访客', value: 18452, unit: '人', delta: 12.4 }
+  const kpi: CoreMetric = {
+    id: 'capacity',
+    name: '实时产能',
+    value: 1280,
+    unit: '件/分',
+    delta: 3.2,
+    status: 'normal',
+  }
 
-  it('KpiCard renders label and unit', () => {
+  it('KpiCard renders name and unit', () => {
     const wrapper = mount(KpiCard, { props: { kpi } })
-    expect(wrapper.text()).toContain('今日访客')
-    expect(wrapper.text()).toContain('人')
+    expect(wrapper.text()).toContain('实时产能')
+    expect(wrapper.text()).toContain('件/分')
     expect(wrapper.text()).toContain('▲')
   })
 

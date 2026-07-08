@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import type { Kpi } from '@/services/datasource/types'
+import type { CoreMetric } from '@/services/datasource/types'
 import { useKpiAnim } from './useKpiAnim'
 
 const props = defineProps<{
-  kpi: Kpi
+  kpi: CoreMetric
 }>()
 
 const display = ref(0)
@@ -39,9 +39,12 @@ watch(
 </script>
 
 <template>
-  <div class="kpi">
-    <div class="kpi__label">{{ kpi.label }}</div>
-    <div class="kpi__value">
+    <div class="kpi" :class="kpi.status ? `is-${kpi.status}` : ''">
+      <div class="kpi__label">
+        <span v-if="kpi.status" class="kpi__dot" />
+        {{ kpi.name }}
+      </div>
+      <div class="kpi__value">
       <span
         v-for="(cell, index) in cells"
         :key="index"
@@ -82,6 +85,29 @@ watch(
 .kpi__label {
   font-size: 13px;
   color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kpi__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-1);
+  flex-shrink: 0;
+}
+
+.kpi.is-normal .kpi__dot {
+  background: var(--accent);
+}
+
+.kpi.is-warning .kpi__dot {
+  background: var(--warn);
+}
+
+.kpi.is-danger .kpi__dot {
+  background: var(--negative);
 }
 
 .kpi__value {

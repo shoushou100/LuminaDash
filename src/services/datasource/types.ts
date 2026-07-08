@@ -1,9 +1,13 @@
-export interface Kpi {
+export type MetricStatus = 'normal' | 'warning' | 'danger'
+
+export interface CoreMetric {
   id: string
-  label: string
+  name: string
   value: number
   unit: string
   delta: number
+  threshold?: number
+  status?: MetricStatus
 }
 
 export interface TrendPoint {
@@ -21,24 +25,32 @@ export interface ShareItem {
   value: number
 }
 
-export interface RealtimeItem {
-  region: string
+export type AlertLevel = 'normal' | 'warning' | 'danger'
+
+export interface AlertItem {
+  id: string
+  level: AlertLevel
+  title: string
+  metric: string
   value: number
+  threshold: number
+  time: string
+  status?: 'active' | 'resolved'
 }
 
 export interface DashboardData {
-  kpis: Kpi[]
+  core: CoreMetric[]
   trend: TrendPoint[]
   category: CategoryItem[]
   share: ShareItem[]
-  realtime: RealtimeItem[]
+  alerts: AlertItem[]
 }
 
 export interface DataSource {
-  getKpis(): Promise<Kpi[]>
+  getCore(): Promise<CoreMetric[]>
   getTrend(): Promise<TrendPoint[]>
   getCategory(): Promise<CategoryItem[]>
   getShare(): Promise<ShareItem[]>
-  getRealtime(): Promise<RealtimeItem[]>
+  getAlerts(): Promise<AlertItem[]>
   tick(): Promise<DashboardData>
 }

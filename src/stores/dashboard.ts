@@ -2,9 +2,10 @@ import { defineStore } from 'pinia'
 import { dataSource } from '@/services/datasource'
 import { createLogger } from '@/core/logger'
 import type {
+  AlertItem,
   CategoryItem,
-  Kpi,
-  RealtimeItem,
+  CoreMetric,
+  DashboardData,
   ShareItem,
   TrendPoint,
 } from '@/services/datasource/types'
@@ -12,11 +13,11 @@ import type {
 const logger = createLogger('store:dashboard')
 
 interface DashboardState {
-  kpis: Kpi[]
+  core: CoreMetric[]
   trend: TrendPoint[]
   category: CategoryItem[]
   share: ShareItem[]
-  realtime: RealtimeItem[]
+  alerts: AlertItem[]
   loading: boolean
   lastUpdated: string
 }
@@ -27,11 +28,11 @@ function nowTime(): string {
 
 export const useDashboardStore = defineStore('dashboard', {
   state: (): DashboardState => ({
-    kpis: [],
+    core: [],
     trend: [],
     category: [],
     share: [],
-    realtime: [],
+    alerts: [],
     loading: false,
     lastUpdated: '',
   }),
@@ -40,18 +41,18 @@ export const useDashboardStore = defineStore('dashboard', {
       this.loading = true
       logger.info('loading dashboard data')
       try {
-        const [kpis, trend, category, share, realtime] = await Promise.all([
-          dataSource.getKpis(),
+        const [core, trend, category, share, alerts] = await Promise.all([
+          dataSource.getCore(),
           dataSource.getTrend(),
           dataSource.getCategory(),
           dataSource.getShare(),
-          dataSource.getRealtime(),
+          dataSource.getAlerts(),
         ])
-        this.kpis = kpis
+        this.core = core
         this.trend = trend
         this.category = category
         this.share = share
-        this.realtime = realtime
+        this.alerts = alerts
         this.lastUpdated = nowTime()
         logger.info('dashboard data loaded')
       } catch (error) {
@@ -60,17 +61,13 @@ export const useDashboardStore = defineStore('dashboard', {
         this.loading = false
       }
     },
-    async refreshRealtime(): Promise<void> {
-      this.realtime = await dataSource.getRealtime()
-      this.lastUpdated = nowTime()
-    },
     async tick(): Promise<void> {
-      const data = await dataSource.tick()
-      this.kpis = data.kpis
+      const data: DashboardData = await dataSource.tick()
+      this.core = data.core
       this.trend = data.trend
       this.category = data.category
       this.share = data.share
-      this.realtime = data.realtime
+      this.alerts = data.alerts
       this.lastUpdated = nowTime()
     },
   },

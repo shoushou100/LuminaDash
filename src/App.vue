@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import autofit from 'autofit.js'
 import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard'
@@ -9,21 +9,18 @@ import ScreenContainer from '@/modules/layout/ScreenContainer.vue'
 import PanelHeader from '@/modules/widgets/PanelHeader.vue'
 import KpiCard from '@/modules/widgets/KpiCard.vue'
 import ScreenshotToggle from '@/modules/widgets/ScreenshotToggle.vue'
+import AlertPanel from '@/modules/widgets/AlertPanel.vue'
 import LineTrendChart from '@/modules/charts/LineTrendChart.vue'
 import BarCategoryChart from '@/modules/charts/BarCategoryChart.vue'
 import PieShareChart from '@/modules/charts/PieShareChart.vue'
-import GaugeChart from '@/modules/charts/GaugeChart.vue'
-import MapChart from '@/modules/charts/MapChart.vue'
 
 const logger = createLogger('app')
 const store = useDashboardStore()
-const { kpis, trend, category, share, realtime, loading, lastUpdated } = storeToRefs(store)
+const { core, trend, category, share, alerts, loading, lastUpdated } = storeToRefs(store)
 
 const clock = ref('')
 let clockTimer: number | undefined
 let refreshTimer: number | undefined
-
-const completionRate = computed(() => 86)
 
 function tickClock(): void {
   clock.value = new Date().toLocaleTimeString('zh-CN')
@@ -52,7 +49,7 @@ onBeforeUnmount(() => {
 <template>
   <ScreenContainer title="流光大屏 · LuminaDash">
     <template #top-left>
-      <span>数据来源：Mock</span>
+      <span>数据源：{{ env.dataSource === 'api' ? 'API' : '文件' }}</span>
     </template>
     <template #top-right>
       <div class="top-right">
@@ -63,32 +60,26 @@ onBeforeUnmount(() => {
 
     <div class="dashboard">
       <section class="dashboard__kpis">
-        <div v-for="kpi in kpis" :key="kpi.id" class="dashboard__kpi">
-          <KpiCard :kpi="kpi" />
+        <div v-for="item in core" :key="item.id" class="dashboard__kpi">
+          <KpiCard :kpi="item" />
         </div>
       </section>
 
       <section class="dashboard__charts">
-        <PanelHeader title="实时趋势" class="span-2">
+        <PanelHeader title="产能趋势" class="span-2">
           <template #header>{{ loading ? '加载中…' : 'OK' }}</template>
           <LineTrendChart :data="trend" />
         </PanelHeader>
 
-        <PanelHeader title="区域对比">
+        <PanelHeader title="区域分布">
           <BarCategoryChart :data="category" />
         </PanelHeader>
 
-        <PanelHeader title="渠道占比">
+        <PanelHeader title="产线占比">
           <PieShareChart :data="share" />
         </PanelHeader>
 
-        <PanelHeader title="目标完成率">
-          <GaugeChart :value="completionRate" title="完成率" />
-        </PanelHeader>
-
-        <PanelHeader title="区域分布">
-          <MapChart :data="realtime" />
-        </PanelHeader>
+        <AlertPanel :alerts="alerts" class="span-2" />
       </section>
     </div>
   </ScreenContainer>

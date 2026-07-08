@@ -1,14 +1,14 @@
 import { env } from '@/core/config/env'
 import { createLogger } from '@/core/logger'
 import type {
+  AlertItem,
   CategoryItem,
+  CoreMetric,
   DashboardData,
-  Kpi,
-  RealtimeItem,
+  DataSource,
   ShareItem,
   TrendPoint,
 } from './types'
-import type { DataSource } from './types'
 
 const logger = createLogger('datasource:api')
 
@@ -23,8 +23,8 @@ async function request<T>(path: string): Promise<T> {
 }
 
 export class ApiDataSource implements DataSource {
-  getKpis(): Promise<Kpi[]> {
-    return request<Kpi[]>('/kpis')
+  getCore(): Promise<CoreMetric[]> {
+    return request<CoreMetric[]>('/core')
   }
 
   getTrend(): Promise<TrendPoint[]> {
@@ -39,18 +39,18 @@ export class ApiDataSource implements DataSource {
     return request<ShareItem[]>('/share')
   }
 
-  getRealtime(): Promise<RealtimeItem[]> {
-    return request<RealtimeItem[]>('/realtime')
+  getAlerts(): Promise<AlertItem[]> {
+    return request<AlertItem[]>('/alerts')
   }
 
   async tick(): Promise<DashboardData> {
-    const [kpis, trend, category, share, realtime] = await Promise.all([
-      this.getKpis(),
+    const [core, trend, category, share, alerts] = await Promise.all([
+      this.getCore(),
       this.getTrend(),
       this.getCategory(),
       this.getShare(),
-      this.getRealtime(),
+      this.getAlerts(),
     ])
-    return { kpis, trend, category, share, realtime }
+    return { core, trend, category, share, alerts }
   }
 }

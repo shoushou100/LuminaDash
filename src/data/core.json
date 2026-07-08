@@ -1,0 +1,6 @@
+[
+  { "id": "capacity", "name": "实时产能", "value": 1280, "unit": "件/分", "delta": 3.2, "threshold": 1200, "status": "normal" },
+  { "id": "online", "name": "在线设备", "value": 86, "unit": "台", "delta": 1.1, "threshold": 80, "status": "normal" },
+  { "id": "output", "name": "今日产量", "value": 184520, "unit": "件", "delta": 5.4, "threshold": 180000, "status": "normal" },
+  { "id": "yield", "name": "良品率", "value": 97.6, "unit": "%", "delta": -0.8, "threshold": 98, "status": "warning" }
+]

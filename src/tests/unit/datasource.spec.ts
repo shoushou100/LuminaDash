@@ -1,37 +1,43 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mockDashboard } from '@/mock/dashboard.data'
+import coreData from '@/data/core.json'
+import { FileDataSource } from '@/services/datasource/file'
+import { ApiDataSource } from '@/services/datasource/api'
 
-describe('datasource (mock/api switch)', () => {
-  it('MockDataSource returns mock dashboard data', async () => {
-    const { MockDataSource } = await import('@/services/datasource/mock')
-    const ds = new MockDataSource()
-    const [kpis, trend, category, share, realtime] = await Promise.all([
-      ds.getKpis(),
+describe('datasource (file/api switch)', () => {
+  it('FileDataSource returns data loaded from src/data', async () => {
+    const ds = new FileDataSource()
+    const [core, trend, category, share, alerts] = await Promise.all([
+      ds.getCore(),
       ds.getTrend(),
       ds.getCategory(),
       ds.getShare(),
-      ds.getRealtime(),
+      ds.getAlerts(),
     ])
-    expect(kpis).toEqual(mockDashboard.kpis)
+    expect(core.length).toBe(coreData.length)
     expect(trend.length).toBeGreaterThan(0)
-    expect(category.length).toBe(mockDashboard.category.length)
-    expect(share.length).toBe(mockDashboard.share.length)
-    expect(realtime.length).toBe(mockDashboard.realtime.length)
+    expect(category.length).toBeGreaterThan(0)
+    expect(share.length).toBeGreaterThan(0)
+    expect(alerts.length).toBeGreaterThan(0)
   })
 
-  it('createDataSource returns MockDataSource by default', async () => {
+  it('FileDataSource.tick returns a full DashboardData snapshot', async () => {
+    const data = await new FileDataSource().tick()
+    expect(Object.keys(data).sort()).toEqual(
+      ['alerts', 'category', 'core', 'share', 'trend'].sort(),
+    )
+  })
+
+  it('createDataSource returns FileDataSource by default', async () => {
     vi.stubEnv('VITE_DATA_SOURCE', 'mock')
-    const mod = await import('@/services/datasource/index')
-    const ds = mod.createDataSource()
-    const { MockDataSource } = await import('@/services/datasource/mock')
-    expect(ds).toBeInstanceOf(MockDataSource)
+    const { createDataSource } = await import('@/services/datasource/index')
+    expect(createDataSource()).toBeInstanceOf(FileDataSource)
+    vi.unstubAllEnvs()
   })
 
   it('createDataSource returns ApiDataSource when VITE_DATA_SOURCE=api', async () => {
     vi.stubEnv('VITE_DATA_SOURCE', 'api')
-    const mod = await import('@/services/datasource/index')
-    const ds = mod.createDataSource()
-    const { ApiDataSource } = await import('@/services/datasource/api')
-    expect(ds).toBeInstanceOf(ApiDataSource)
+    const { createDataSource } = await import('@/services/datasource/index')
+    expect(createDataSource()).toBeInstanceOf(ApiDataSource)
+    vi.unstubAllEnvs()
   })
 })

@@ -1,6 +1,6 @@
 import { createLogger } from '@/core/logger'
 import { ApiDataSource } from './api'
-import { MockDataSource } from './mock'
+import { FileDataSource } from './file'
 import type { DataSource } from './types'
 
 const logger = createLogger('datasource')
@@ -11,7 +11,7 @@ export function createDataSource(): DataSource {
   if (mode === 'api') {
     return new ApiDataSource()
   }
-  return new MockDataSource()
+  return new FileDataSource()
 }
 
 export const dataSource: DataSource = createDataSource()
