@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import autofit from 'autofit.js'
 import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard'
@@ -10,17 +10,42 @@ import PanelHeader from '@/modules/widgets/PanelHeader.vue'
 import KpiCard from '@/modules/widgets/KpiCard.vue'
 import ScreenshotToggle from '@/modules/widgets/ScreenshotToggle.vue'
 import AlertPanel from '@/modules/widgets/AlertPanel.vue'
+import ComparisonPanel from '@/modules/widgets/ComparisonPanel.vue'
 import LineTrendChart from '@/modules/charts/LineTrendChart.vue'
-import BarCategoryChart from '@/modules/charts/BarCategoryChart.vue'
-import PieShareChart from '@/modules/charts/PieShareChart.vue'
+import type {
+  AlertBlock,
+  AlertItem,
+  CoreMetric,
+  DashboardBlock,
+  TrendBlock,
+} from '@/services/datasource/types'
 
 const logger = createLogger('app')
 const store = useDashboardStore()
-const { core, trend, category, share, alerts, loading, lastUpdated } = storeToRefs(store)
+const { blocks, loading, lastUpdated } = storeToRefs(store)
 
 const clock = ref('')
 let clockTimer: number | undefined
 let refreshTimer: number | undefined
+
+const metricItems = computed(() =>
+  blocks.value
+    .filter((b) => b.chart === 'metric')
+    .flatMap((b) => b.data as CoreMetric[]),
+)
+const lineBlocks = computed<TrendBlock[]>(() =>
+  blocks.value
+    .filter((b) => b.chart === 'line')
+    .map((b) => ({ ...b, data: b.data as TrendBlock['data'] })),
+)
+const barBlocks = computed<DashboardBlock[]>(() =>
+  blocks.value.filter((b) => b.chart === 'bar' || b.chart === 'pie'),
+)
+const alertBlocks = computed<AlertBlock[]>(() =>
+  blocks.value
+    .filter((b) => b.chart === 'alert')
+    .map((b) => ({ ...b, data: b.data as AlertItem[] })),
+)
 
 function tickClock(): void {
   clock.value = new Date().toLocaleTimeString('zh-CN')
@@ -60,26 +85,29 @@ onBeforeUnmount(() => {
 
     <div class="dashboard">
       <section class="dashboard__kpis">
-        <div v-for="item in core" :key="item.id" class="dashboard__kpi">
+        <div v-for="(item, i) in metricItems" :key="i" class="dashboard__kpi">
           <KpiCard :kpi="item" />
         </div>
       </section>
 
       <section class="dashboard__charts">
-        <PanelHeader title="产能趋势" class="span-2">
+        <PanelHeader
+          v-for="line in lineBlocks"
+          :key="line.file"
+          :title="line.title"
+        >
           <template #header>{{ loading ? '加载中…' : 'OK' }}</template>
-          <LineTrendChart :data="trend" />
+          <LineTrendChart :data="line.data" />
         </PanelHeader>
 
-        <PanelHeader title="区域分布">
-          <BarCategoryChart :data="category" />
-        </PanelHeader>
+        <ComparisonPanel v-if="barBlocks.length" :blocks="barBlocks" />
 
-        <PanelHeader title="产线占比">
-          <PieShareChart :data="share" />
-        </PanelHeader>
-
-        <AlertPanel :alerts="alerts" class="span-2" />
+        <AlertPanel
+          v-for="alert in alertBlocks"
+          :key="alert.file"
+          :alerts="alert.data"
+          :title="alert.title"
+        />
       </section>
     </div>
   </ScreenContainer>
@@ -114,12 +142,8 @@ onBeforeUnmount(() => {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1.2fr 1fr 1fr;
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(0, 1fr);
   gap: 24px;
-}
-
-.dashboard__charts :deep(.span-2) {
-  grid-column: span 2;
 }
 </style>

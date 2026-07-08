@@ -1,13 +1,10 @@
 import { env } from '@/core/config/env'
 import { createLogger } from '@/core/logger'
 import type {
-  AlertItem,
-  CategoryItem,
-  CoreMetric,
   DashboardData,
   DataSource,
-  ShareItem,
-  TrendPoint,
+  ManifestBlock,
+  DashboardBlock,
 } from './types'
 
 const logger = createLogger('datasource:api')
@@ -23,34 +20,22 @@ async function request<T>(path: string): Promise<T> {
 }
 
 export class ApiDataSource implements DataSource {
-  getCore(): Promise<CoreMetric[]> {
-    return request<CoreMetric[]>('/core')
+  getManifest(): Promise<ManifestBlock[]> {
+    return request<ManifestBlock[]>('/manifest')
   }
 
-  getTrend(): Promise<TrendPoint[]> {
-    return request<TrendPoint[]>('/trend')
-  }
-
-  getCategory(): Promise<CategoryItem[]> {
-    return request<CategoryItem[]>('/category')
-  }
-
-  getShare(): Promise<ShareItem[]> {
-    return request<ShareItem[]>('/share')
-  }
-
-  getAlerts(): Promise<AlertItem[]> {
-    return request<AlertItem[]>('/alerts')
+  getBlockData(file: string): Promise<unknown> {
+    return request<unknown>(`/data/${file}`)
   }
 
   async tick(): Promise<DashboardData> {
-    const [core, trend, category, share, alerts] = await Promise.all([
-      this.getCore(),
-      this.getTrend(),
-      this.getCategory(),
-      this.getShare(),
-      this.getAlerts(),
-    ])
-    return { core, trend, category, share, alerts }
+    const manifest = await this.getManifest()
+    const blocks: DashboardBlock[] = await Promise.all(
+      manifest.map(async (block) => ({
+        ...block,
+        data: await this.getBlockData(block.file),
+      })),
+    )
+    return { blocks }
   }
 }

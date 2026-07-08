@@ -4,6 +4,7 @@ import type { AlertItem, AlertLevel } from '@/services/datasource/types'
 
 const props = defineProps<{
   alerts: AlertItem[]
+  title?: string
 }>()
 
 const levelText: Record<AlertLevel, string> = {
@@ -21,7 +22,7 @@ const activeCount = computed(
   <section class="alerts">
     <header class="alerts__header">
       <span class="alerts__bar" />
-      <h3 class="alerts__title">实时监控预警</h3>
+      <h3 class="alerts__title">{{ props.title || '实时监控预警' }}</h3>
       <span class="alerts__count">{{ activeCount }} 条活动</span>
     </header>
     <ul class="alerts__list">

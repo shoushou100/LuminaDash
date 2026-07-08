@@ -10,7 +10,7 @@ const props = defineProps<{
 const display = ref(0)
 const { animate } = useKpiAnim()
 
-const isUp = computed(() => props.kpi.delta >= 0)
+const isUp = computed(() => (props.kpi.delta ?? 0) >= 0)
 
 const cells = computed(() => {
   const text =
@@ -64,7 +64,7 @@ watch(
     </div>
     <div class="kpi__delta" :class="isUp ? 'is-up' : 'is-down'">
       <span>{{ isUp ? '▲' : '▼' }}</span>
-      {{ Math.abs(kpi.delta).toFixed(1) }}%
+      {{ Math.abs(kpi.delta ?? 0).toFixed(1) }}%
     </div>
   </div>
 </template>

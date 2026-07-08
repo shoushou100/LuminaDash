@@ -1,11 +1,11 @@
 export type MetricStatus = 'normal' | 'warning' | 'danger'
 
 export interface CoreMetric {
-  id: string
+  id?: string
   name: string
   value: number
-  unit: string
-  delta: number
+  unit?: string
+  delta?: number
   threshold?: number
   status?: MetricStatus
 }
@@ -16,11 +16,6 @@ export interface TrendPoint {
 }
 
 export interface CategoryItem {
-  name: string
-  value: number
-}
-
-export interface ShareItem {
   name: string
   value: number
 }
@@ -38,19 +33,32 @@ export interface AlertItem {
   status?: 'active' | 'resolved'
 }
 
+export type ChartType = 'metric' | 'line' | 'bar' | 'pie' | 'alert'
+
+export interface ManifestBlock {
+  file: string
+  title: string
+  chart: ChartType
+}
+
+export interface DashboardBlock extends ManifestBlock {
+  data: unknown
+}
+
+export interface TrendBlock extends DashboardBlock {
+  data: TrendPoint[]
+}
+
+export interface AlertBlock extends DashboardBlock {
+  data: AlertItem[]
+}
+
 export interface DashboardData {
-  core: CoreMetric[]
-  trend: TrendPoint[]
-  category: CategoryItem[]
-  share: ShareItem[]
-  alerts: AlertItem[]
+  blocks: DashboardBlock[]
 }
 
 export interface DataSource {
-  getCore(): Promise<CoreMetric[]>
-  getTrend(): Promise<TrendPoint[]>
-  getCategory(): Promise<CategoryItem[]>
-  getShare(): Promise<ShareItem[]>
-  getAlerts(): Promise<AlertItem[]>
+  getManifest(): Promise<ManifestBlock[]>
+  getBlockData(file: string): Promise<unknown>
   tick(): Promise<DashboardData>
 }
