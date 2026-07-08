@@ -1,8 +1,32 @@
 [
-  { "id": "a1", "level": "danger", "title": "3 号窑炉温度超限", "metric": "炉温", "value": 812, "threshold": 780, "time": "16:08:22", "status": "active" },
-  { "id": "a2", "level": "warning", "title": "B 区良品率下滑", "metric": "良品率", "value": 96.2, "threshold": 98, "time": "16:05:10", "status": "active" },
-  { "id": "a3", "level": "normal", "title": "日常巡检完成", "metric": "巡检", "value": 100, "threshold": 100, "time": "15:58:40", "status": "resolved" },
-  { "id": "a4", "level": "warning", "title": "输送带负载偏高", "metric": "负载", "value": 88, "threshold": 85, "time": "15:50:02", "status": "active" },
-  { "id": "a5", "level": "danger", "title": "电压波动预警", "metric": "电压", "value": 395, "threshold": 380, "time": "15:42:18", "status": "active" },
-  { "id": "a6", "level": "normal", "title": "冷却系统正常", "metric": "水温", "value": 32, "threshold": 45, "time": "15:30:55", "status": "resolved" }
+  {
+    "id": "mem-host008",
+    "level": "danger",
+    "title": "server-008 内存使用率过高",
+    "metric": "内存",
+    "value": 96.7,
+    "threshold": 85,
+    "time": "23:00",
+    "status": "active"
+  },
+  {
+    "id": "cpu-host006",
+    "level": "warning",
+    "title": "server-006 CPU 使用率偏高",
+    "metric": "CPU",
+    "value": 69.6,
+    "threshold": 60,
+    "time": "23:00",
+    "status": "active"
+  },
+  {
+    "id": "cpu-host017",
+    "level": "warning",
+    "title": "server-017 CPU 使用率偏高",
+    "metric": "CPU",
+    "value": 62.7,
+    "threshold": 60,
+    "time": "23:00",
+    "status": "active"
+  }
 ]

@@ -1,7 +1,6 @@
 [
-  { "file": "core", "title": "核心数据", "chart": "metric" },
-  { "file": "trend", "title": "产能趋势", "chart": "line" },
-  { "file": "category", "title": "区域分布", "chart": "bar" },
-  { "file": "share", "title": "产线占比", "chart": "bar" },
+  { "file": "core", "title": "核心指标", "chart": "metric" },
+  { "file": "trend", "title": "CPU 趋势", "chart": "line" },
+  { "file": "hosts", "title": "主机 CPU 对比", "chart": "bar" },
   { "file": "alerts", "title": "实时监控预警", "chart": "alert" }
 ]

@@ -1,0 +1,182 @@
+[
+  {
+    "name": "server-001",
+    "value": 22.1,
+    "host": "host001",
+    "cpu": 22.09,
+    "mem": 73.2,
+    "disk": 0,
+    "net": 247.65
+  },
+  {
+    "name": "server-002",
+    "value": 55.9,
+    "host": "host002",
+    "cpu": 55.85,
+    "mem": 7.5,
+    "disk": 0,
+    "net": 362.92
+  },
+  {
+    "name": "server-003",
+    "value": 7.4,
+    "host": "host003",
+    "cpu": 7.44,
+    "mem": 47.3,
+    "disk": 0,
+    "net": 315.9
+  },
+  {
+    "name": "server-004",
+    "value": 44.4,
+    "host": "host004",
+    "cpu": 44.37,
+    "mem": 16.8,
+    "disk": 0,
+    "net": 704.46
+  },
+  {
+    "name": "server-005",
+    "value": 24.4,
+    "host": "host005",
+    "cpu": 24.38,
+    "mem": 23.5,
+    "disk": 0,
+    "net": 968.65
+  },
+  {
+    "name": "server-006",
+    "value": 69.6,
+    "host": "host006",
+    "cpu": 69.57,
+    "mem": 29.4,
+    "disk": 0,
+    "net": 474.84
+  },
+  {
+    "name": "server-007",
+    "value": 44.9,
+    "host": "host007",
+    "cpu": 44.85,
+    "mem": 15.8,
+    "disk": 0,
+    "net": 467.76
+  },
+  {
+    "name": "server-008",
+    "value": 49.2,
+    "host": "host008",
+    "cpu": 49.19,
+    "mem": 96.7,
+    "disk": 0,
+    "net": 347.23
+  },
+  {
+    "name": "server-009",
+    "value": 33.9,
+    "host": "host009",
+    "cpu": 33.91,
+    "mem": 77.8,
+    "disk": 0,
+    "net": 706.06
+  },
+  {
+    "name": "server-010",
+    "value": 19.8,
+    "host": "host010",
+    "cpu": 19.81,
+    "mem": 55.1,
+    "disk": 0,
+    "net": 828.5
+  },
+  {
+    "name": "server-011",
+    "value": 29.9,
+    "host": "host011",
+    "cpu": 29.87,
+    "mem": 22.7,
+    "disk": 0,
+    "net": 830.77
+  },
+  {
+    "name": "server-012",
+    "value": 59.7,
+    "host": "host012",
+    "cpu": 59.65,
+    "mem": 51.4,
+    "disk": 0,
+    "net": 192.64
+  },
+  {
+    "name": "server-013",
+    "value": 34.1,
+    "host": "host013",
+    "cpu": 34.08,
+    "mem": 36.6,
+    "disk": 0,
+    "net": 102.3
+  },
+  {
+    "name": "server-014",
+    "value": 57.1,
+    "host": "host014",
+    "cpu": 57.12,
+    "mem": 47.7,
+    "disk": 0,
+    "net": 83.9
+  },
+  {
+    "name": "server-015",
+    "value": 33.1,
+    "host": "host015",
+    "cpu": 33.11,
+    "mem": 41.8,
+    "disk": 0,
+    "net": 180.9
+  },
+  {
+    "name": "server-016",
+    "value": 16.8,
+    "host": "host016",
+    "cpu": 16.79,
+    "mem": 43.6,
+    "disk": 0,
+    "net": 313.97
+  },
+  {
+    "name": "server-017",
+    "value": 62.7,
+    "host": "host017",
+    "cpu": 62.72,
+    "mem": 40.8,
+    "disk": 0,
+    "net": 900.93
+  },
+  {
+    "name": "server-018",
+    "value": 41.7,
+    "host": "host018",
+    "cpu": 41.72,
+    "mem": 26,
+    "disk": 0,
+    "net": 577.11
+  },
+  {
+    "name": "server-019",
+    "value": 58.9,
+    "host": "host019",
+    "cpu": 58.85,
+    "mem": 32.8,
+    "disk": 0,
+    "net": 149.57
+  },
+  {
+    "name": "server-020",
+    "value": 26,
+    "host": "host020",
+    "cpu": 25.98,
+    "mem": 53.6,
+    "disk": 0,
+    "net": 996.87
+  }
+]
