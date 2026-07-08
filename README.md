@@ -1,6 +1,6 @@
 # LuminaDash · 流光大屏
 
-> 一个基于 Vue 3 的数据可视化大屏项目，主打极简中性深色风格、实时模拟数据与一键自动化截图。
+> 基于 Vue 3 的数据可视化大屏，对接真实 tsar 监控数据，主打极简中性深色风格与数据驱动渲染。
 
 [![Build](https://img.shields.io/badge/build-passing-2ea043)](https://github.com/shoushou100/LuminaDash)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
@@ -15,11 +15,11 @@
 ## ✨ 特性
 
 - 🎨 **极简中性深色主题**：单一强调蓝 `#3b82f6`，去除霓虹光晕与渐变，留白充足、信息层级清晰。
-- 📊 **五类图表**：实时趋势折线、区域对比柱状、渠道占比饼图、目标完成率仪表盘、区域分布散点。
-- 🔢 **KPI 按位滚动动画**：仅变化的数字位会滚动，未变位保持静止，过渡自然。
-- 🔄 **实时模拟数据**：内置随机游走（random walk）数据源，每 3 秒平滑刷新全部指标与图表。
+- 📊 **数据驱动大屏**：界面区块完全由 `src/data/manifest.json` 声明，自动渲染对应图表，无写死业务预设。
+- 📈 **真实监控数据**：对接 tsar 系统监控数据（CPU / 内存 / 磁盘 / 网络），支持 7 天时间序列与 20 台主机快照。
+- 🔢 **KPI 按位滚动动画**：仅变化的数字位滚动，未变位保持静止，过渡自然。
 - 📐 **自适应大屏**：基于 `autofit.js` 的 1920×1080 设计稿等比缩放，适配不同分辨率。
-- 🔌 **可切换数据源**：通过 `VITE_DATA_SOURCE` 在 `mock`（带实时模拟）与 `api`（REST）之间切换。
+- 🔌 **可切换数据源**：通过 `VITE_DATA_SOURCE` 在 `file`（本地 JSON）与 `api`（REST）之间切换。
 - 📸 **一键自动化截图**：CLI 循环/单次截图，网页内「截图模式」开关即开即停，便于验收与资料引用。
 
 ## 🖼️ 界面预览
@@ -58,7 +58,7 @@ npm run preview
 
 | 变量 | 说明 | 默认值 |
 | --- | --- | --- |
-| `VITE_DATA_SOURCE` | 数据源模式：`mock`（带实时模拟）或 `api`（REST 接口） | `mock` |
+| `VITE_DATA_SOURCE` | 数据源模式：`file`（本地 JSON）或 `api`（REST 接口） | `file` |
 | `VITE_API_BASE_URL` | `api` 模式下的接口基础地址 | `/api` |
 | `VITE_REFRESH_INTERVAL` | 实时数据刷新间隔（毫秒） | `3000` |
 
@@ -75,39 +75,47 @@ npm run preview
 
 ```
 LuminaDash/
-├── index.html
-├── package.json
-├── vite.config.ts            # 含截图控制中间件 /api/screenshot/*
-├── playwright.config.ts      # e2e 测试配置（自动拉起 dev）
-├── tsconfig.json
-├── .env.development / .env.production
+├── data/                        # 原始监控数据（tsar .dat 文件）
+│   ├── disk_tsar.dat            # 磁盘 I/O 时间序列
+│   ├── pref_tsar.dat            # CPU/内存/网络/负载时间序列
+│   ├── host_detail.dat          # 主机明细（20 台）
+│   └── mod_detail.dat           # 指标元数据映射
 ├── scripts/
-│   ├── screenshot.mjs        # CLI 自动截图（循环 / 单次）
-│   └── screenshot-core.mjs   # 截图核心逻辑（CLI 与 dev 中间件共用）
+│   ├── import-dat.mjs           # 解析 data/ 下 .dat 并生成 src/data/*.json
+│   ├── screenshot.mjs           # CLI 自动截图（循环 / 单次）
+│   └── screenshot-core.mjs      # 截图核心逻辑（CLI 与 dev 中间件共用）
+├── src/
+│   ├── main.ts
+│   ├── App.vue
+│   ├── core/
+│   │   ├── config/              # env.ts（环境变量）、chart.ts（图表主题）
+│   │   ├── logger/              # 轻量日志
+│   │   └── utils/               # 工具函数
+│   ├── stores/
+│   │   └── dashboard.ts         # Pinia 全局状态
+│   ├── services/
+│   │   └── datasource/          # DataSource 抽象 + File / Api 实现
+│   ├── data/                    # 前端可读的 JSON 数据（由 import-dat.mjs 生成）
+│   │   ├── manifest.json        # 区块声明（title + chart 类型）
+│   │   ├── core.json            # 核心指标快照
+│   │   ├── trend.json           # 时间序列趋势
+│   │   ├── hosts.json           # 主机对比数据
+│   │   └── alerts.json          # 实时监控预警
+│   ├── modules/
+│   │   ├── layout/              # ScreenContainer 大屏布局
+│   │   ├── charts/              # 折线 / 柱状 / 饼图 / 仪表盘 / 地图
+│   │   └── widgets/             # KpiCard / PanelHeader / AlertPanel / ScreenshotToggle
+│   ├── styles/                  # theme.css / global.css
+│   └── tests/
+│       ├── unit/                # Vitest 单元测试
+│       └── e2e/                 # Playwright 端到端测试
 ├── docs/
-│   └── preview.png           # 预览图（自动生成，随仓库提交）
-├── pic/                      # 截图输出目录（已被 .gitignore 忽略）
-└── src/
-    ├── main.ts
-    ├── App.vue
-    ├── core/
-    │   ├── config/           # env.ts（环境变量）、chart.ts（图表主题）
-    │   ├── logger/           # 轻量日志
-    │   └── utils/            # 工具函数
-    ├── stores/
-    │   └── dashboard.ts      # Pinia 全局状态
-    ├── services/
-    │   └── datasource/       # DataSource 抽象 + Mock / Api 实现
-    ├── mock/
-    │   └── dashboard.data.ts # mock 种子数据
-    ├── modules/
-    │   ├── layout/           # ScreenContainer 大屏布局
-    │   ├── charts/           # 折线 / 柱状 / 饼图 / 仪表盘 / 地图
-    │   └── widgets/          # KpiCard / PanelHeader / ScreenshotToggle
-    ├── styles/               # theme.css / global.css
-    └── tests/
-        ├── unit/             # Vitest 单元测试
-        └── e2e/              # Playwright 端到端测试
+│   └── preview.png              # 预览图（自动生成，随仓库提交）
+├── pic/                         # 截图输出目录（已被 .gitignore 忽略）
+├── package.json
+├── vite.config.ts               # 含截图控制中间件 /api/screenshot/*
+├── playwright.config.ts         # e2e 测试配置
+└── tsconfig.json
 ```
 
 ## 📸 自动化截图
